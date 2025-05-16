@@ -8,19 +8,30 @@ public class BehaviorBuilder
         if (agent.monster == "warlock")
         {
             result = new Sequence(new BehaviorTree[] {
-                                        new MoveToPlayer(agent.GetAction("attack").range),
+                                        new GoTo(AIWaypointManager.Instance.Get(4).transform, 4f),
+                                        new PermaBuff(),
+                                        new Heal()
+                
+                /*new MoveToPlayer(agent.GetAction("attack").range),
                                         new Attack(),
                                         new PermaBuff(),
                                         new Heal(),
-                                        new Buff()
+                                        new Buff()*/
                                      });
         }
-        else if (agent.monster == "zombie")
-        {
-            result = new Sequence(new BehaviorTree[] {
+        else if (agent.monster == "zombie") {
+            result = new Selector(new BehaviorTree[] {
+                new Sequence(new BehaviorTree[] {
+                    new NearbyEnemiesQuery(5, 7f),
+                    new MoveToPlayer(4f),
+                    new Attack()
+                }),
+                new GoTo(AIWaypointManager.Instance.Get(4).transform, 4f)
+            });
+            /*result = new Sequence(new BehaviorTree[] {
                                        new MoveToPlayer(agent.GetAction("attack").range),
                                        new Attack()
-                                     });
+                                     });*/
         }
         else
         {
